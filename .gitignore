@@ -1,0 +1,12 @@
+#ignore folders
+
+build/
+DerivedData/
+xcuserdata/
+
+#ignore extensions
+
+*.xccheckout
+*.xcscmblueprint 
+
+

@@ -118,6 +118,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        
         print("***ViewDidAppear: \tframe of editButton: ", editButton.frame)
         // данные отличаются от viewDidLoad из-за различия размеров экранов (в случае iPhone 8
         // в сториборде и iPhone 8plus на симуляторе получаем увеличенную "width" и бОльшую координату "y" из-за constraints:

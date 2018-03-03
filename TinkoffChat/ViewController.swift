@@ -6,47 +6,123 @@
 //  Copyright © 2018 daniilgonchar. All rights reserved.
 //
 
+
+// ProfileViewController
+
+
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+   
+    @IBOutlet weak var editButton: UIButton!
+    @IBOutlet weak var addPicButton: UIButton!
+    @IBOutlet weak var userImage: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var descriptionLabel: UILabel!
+    
+    
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
         
-        print("ViewController: viewDidLoad\n")
-        
-        
-        view.backgroundColor = .red
-        
+        // задание 4.2 , следующая строка выдает ошибку
+        // print("***init: \tframe of editButton: ", editButton.frame)
+        // т.к натыкаемся на nil при разворачивании optional value
         
     }
     
     
-    override func viewWillAppear(_ animated: Bool) {
-        print("ViewController: viewWillAppear\n")
+    @IBAction func editAction(_ sender: Any) {
+        print("editButton pressed")
+    }
+    
+    @IBAction func editPicAction(_ sender: Any) {
+        
+        print("Выбери изображение профиля")
+        
+        
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        
+        
+        let actionSheetAlertController = UIAlertController(title: "Выбор изображения", message:
+            "Выберите существующее изображение из галереи или сделайте новое", preferredStyle: .actionSheet )
+        
+        actionSheetAlertController.addAction(UIAlertAction(title: "Камера", style: .default, handler: { (action:UIAlertAction) in
+            
+            if UIImagePickerController.isSourceTypeAvailable(.camera){
+                
+                imagePickerController.sourceType = .camera
+                self.present(imagePickerController, animated: true, completion: nil)
+                
+            }else
+            {
+                print("Camera is not available")
+            }
+            
+        
+        }))
+        
+        actionSheetAlertController.addAction(UIAlertAction(title: "Галерея", style: .default, handler: { (action:UIAlertAction) in
+            
+            imagePickerController.sourceType = .photoLibrary
+            self.present(imagePickerController, animated: true, completion: nil)
+            
+        }))
+        
+        actionSheetAlertController.addAction(UIAlertAction(title: "Отмена", style: .cancel, handler: nil))
+        
+        
+        self.present(actionSheetAlertController, animated: true, completion: nil)
+        
+    }
+    
+    
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        let image = info[UIImagePickerControllerOriginalImage] as! UIImage 
+        
+        userImage.image = image
+        
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        print("***ViewDidLoad: \tframe of editButton: ", editButton.frame)
+        
+        // Do any additional setup after loading the view, typically from a nib.
+      
+        editButton.layer.borderWidth = 2
+        editButton.layer.cornerRadius = 15
+    
+        userImage.layer.cornerRadius = addPicButton.frame.size.width / 2
+        self.userImage.layer.masksToBounds = true
+        
+        addPicButton.imageEdgeInsets = UIEdgeInsetsMake(12, 12, 12, 12)
+        addPicButton.layer.cornerRadius = addPicButton.frame.size.width / 2
+        
+        
+        
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        print("ViewController: viewDidAppear\n")
+        print("***ViewDidAppear: \tframe of editButton: ", editButton.frame)
+        // данные отличаются от viewDidLoad из-за различия размеров экранов (в случае iPhone 8
+        // в сториборде и iPhone 8plus на симуляторе получаем увеличенную "width" и бОльшую координату "y" из-за constraints:
+        // "Align Bottom to safe area = 30" и отступов по 16 от левого и правого краев экрана )
     }
-    
-    override func viewWillLayoutSubviews() {
-        print("ViewController: viewWillLayoutSubviews\n")
-    }
-    
-    override func viewDidLayoutSubviews() {
-        print("ViewController: viewDidLayoutSubviews\n")
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        print("ViewController: viewWillDisappear\n")
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        print("ViewController: viewDidDisappear\n")
-    }
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

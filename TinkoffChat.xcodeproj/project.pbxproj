@@ -7,19 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DE6AE853204855F400A567FD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DE6AE852204855F400A567FD /* Images.xcassets */; };
 		DE8975842042FDB100932176 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8975832042FDB100932176 /* AppDelegate.swift */; };
 		DE8975862042FDB100932176 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8975852042FDB100932176 /* ViewController.swift */; };
 		DE8975892042FDB100932176 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DE8975872042FDB100932176 /* Main.storyboard */; };
-		DE89758B2042FDB100932176 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DE89758A2042FDB100932176 /* Assets.xcassets */; };
 		DE89758E2042FDB100932176 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DE89758C2042FDB100932176 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DE6AE852204855F400A567FD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		DE8975802042FDB100932176 /* TinkoffChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TinkoffChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE8975832042FDB100932176 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DE8975852042FDB100932176 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		DE8975882042FDB100932176 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		DE89758A2042FDB100932176 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DE89758D2042FDB100932176 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DE89758F2042FDB100932176 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -57,8 +57,8 @@
 				DE8975832042FDB100932176 /* AppDelegate.swift */,
 				DE8975852042FDB100932176 /* ViewController.swift */,
 				DE8975872042FDB100932176 /* Main.storyboard */,
-				DE89758A2042FDB100932176 /* Assets.xcassets */,
 				DE89758C2042FDB100932176 /* LaunchScreen.storyboard */,
+				DE6AE852204855F400A567FD /* Images.xcassets */,
 				DE89758F2042FDB100932176 /* Info.plist */,
 			);
 			path = TinkoffChat;
@@ -123,8 +123,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DE6AE853204855F400A567FD /* Images.xcassets in Resources */,
 				DE89758E2042FDB100932176 /* LaunchScreen.storyboard in Resources */,
-				DE89758B2042FDB100932176 /* Assets.xcassets in Resources */,
 				DE8975892042FDB100932176 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

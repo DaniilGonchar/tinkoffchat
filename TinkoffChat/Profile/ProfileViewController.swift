@@ -12,7 +12,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ProfileViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
    
     @IBOutlet weak var editButton: UIButton!
@@ -112,9 +112,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         addPicButton.imageEdgeInsets = UIEdgeInsetsMake(12, 12, 12, 12)
         addPicButton.layer.cornerRadius = addPicButton.frame.size.width / 2
         
+        self.navigationItem.title = "Profile"
         
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done , target: self, action: #selector(closeProfileVC))
         
-        
+    }
+    
+    @objc func closeProfileVC()
+    {
+        self.dismiss(animated: true)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -124,7 +130,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // данные отличаются от viewDidLoad из-за различия размеров экранов (в случае iPhone 8
         // в сториборде и iPhone 8plus на симуляторе получаем увеличенную "width" и бОльшую координату "y" из-за constraints:
         // "Align Bottom to safe area = 30" и отступов по 16 от левого и правого краев экрана )
+        
     }
+    
+    
+    
+    
+   
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

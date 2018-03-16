@@ -10,26 +10,24 @@ import UIKit
 
 
 class MessageCellConfiguration: UITableViewCell {
+  
+  @IBOutlet weak var gradientImage: UIImageView!
+  @IBOutlet weak var messageTextLabel: UILabel!
+  
+  var messageText: String?
+  var isIncoming: Bool?
+  
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    // Initialization code
     
-    @IBOutlet weak var gradientImage: UIImageView!
-    @IBOutlet weak var messageTextLabel: UILabel!
+    gradientImage.layer.cornerRadius = 15
+  }
+  
+  override func setSelected(_ selected: Bool, animated: Bool) {
+    super.setSelected(selected, animated: animated)
     
-    var messageText: String?
-    var isIncoming: Bool?
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-        
-        gradientImage.layer.cornerRadius = 15
-        
-    
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
+    // Configure the view for the selected state
+  }
+  
 }

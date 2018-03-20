@@ -9,44 +9,12 @@
 import UIKit
 
 
-// gradient for message bubbles - WORK IN PROGRESS
-//extension UIView{
-//
-//    func setGradientBackground(colorOne: UIColor, colorTwo: UIColor){
-//
-//        let gradientLayer = CAGradientLayer()
-//        gradientLayer.frame = bounds
-//        gradientLayer.colors = [colorOne.cgColor, colorTwo.cgColor]
-//        gradientLayer.locations = [0.0, 1.0]
-//        gradientLayer.startPoint = CGPoint(x: 1.0, y: 1.0)
-//        gradientLayer.endPoint = CGPoint(x: 0.0, y: 0.0)
-//
-//        layer.insertSublayer(gradientLayer, at: 0)
-//    }
-//
-//}
-
-
-
-class TestChatMessage: NSObject {
-  var messageText: String?
-  var isIncoming: Bool?
-  
-  init(pmessageText: String, pisIncoming: Bool) {
-    self.messageText = pmessageText
-    self.isIncoming = pisIncoming
-  }
-}
-
-
-
 class ConversationViewController: UIViewController {
   
   @IBOutlet weak var tableView: UITableView!
   
   var recievedNameString = String()
-  var arrayOfTestMessages = [TestChatMessage]()
-  
+  var messageModels = [ChatMessageModel]()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -60,12 +28,12 @@ class ConversationViewController: UIViewController {
     
   
     // creating 6 test messages
-    arrayOfTestMessages.append(TestChatMessage(pmessageText: "I", pisIncoming: true))
-    arrayOfTestMessages.append(TestChatMessage(pmessageText: "umm", pisIncoming: true))
-    arrayOfTestMessages.append(TestChatMessage(pmessageText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, qiallum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", pisIncoming: false))
-    arrayOfTestMessages.append(TestChatMessage(pmessageText: "Dolor sit amet, conset at teu?", pisIncoming: true))
-    arrayOfTestMessages.append(TestChatMessage(pmessageText: "Ut aliq ex ea modo consequat. ", pisIncoming: false))
-    arrayOfTestMessages.append(TestChatMessage(pmessageText: "q", pisIncoming: true))
+    messageModels.append(ChatMessageModel(messageText: "I", isIncoming: true))
+    messageModels.append(ChatMessageModel(messageText: "umm", isIncoming: true))
+    messageModels.append(ChatMessageModel(messageText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, qiallum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", isIncoming: false))
+    messageModels.append(ChatMessageModel(messageText: "Dolor sit amet, conset at teu?", isIncoming: true))
+    messageModels.append(ChatMessageModel(messageText: "Ut aliq ex ea modo consequat. ", isIncoming: false))
+    messageModels.append(ChatMessageModel(messageText: "w", isIncoming: true))
   }
   
 
@@ -92,44 +60,34 @@ extension ConversationViewController: UITableViewDataSource {
   
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return arrayOfTestMessages.count
+    return messageModels.count
   }
   
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
    
-    if (arrayOfTestMessages[indexPath.row].isIncoming)! {
+    if (messageModels[indexPath.row].isIncoming) {
       //incoming message
-      let myCell = tableView.dequeueReusableCell(withIdentifier: "incomingCell") as! MessageCellConfiguration
+      let myCell = tableView.dequeueReusableCell(withIdentifier: "incomingCell") as! MessageCell
       
       myCell.selectionStyle = UITableViewCellSelectionStyle.none
       myCell.messageTextLabel.lineBreakMode = .byWordWrapping
       myCell.messageTextLabel.numberOfLines = 0;
       
-      myCell.messageText = arrayOfTestMessages[indexPath.row].messageText
-      myCell.isIncoming = arrayOfTestMessages[indexPath.row].isIncoming
-      
-      myCell.messageTextLabel.text = myCell.messageText
-      
-      // grey gradient for message bubbles - WORK IN PROGRESS
-      // myCell.gradientImage.setGradientBackground(colorOne: UIColor(red: 170.0/255.0 , green: 170.0/255.0, blue: 170.0/255.0, alpha: 1.0) , colorTwo: UIColor(red: 215.0/255.0 , green: 215.0/255.0, blue: 215.0/255.0, alpha: 1.0))
-      
+      myCell.messageText = messageModels[indexPath.row].messageText
+      myCell.isIncoming = messageModels[indexPath.row].isIncoming
+    
       return myCell
     } else {
       //outgoing message
-      let myCell = tableView.dequeueReusableCell(withIdentifier: "outgoingCell") as! MessageCellConfiguration
+      let myCell = tableView.dequeueReusableCell(withIdentifier: "outgoingCell") as! MessageCell
     
       myCell.selectionStyle = UITableViewCellSelectionStyle.none
       myCell.messageTextLabel.lineBreakMode = .byWordWrapping
       myCell.messageTextLabel.numberOfLines = 0;
       
-      myCell.messageText = arrayOfTestMessages[indexPath.row].messageText
-      myCell.isIncoming = arrayOfTestMessages[indexPath.row].isIncoming
-      
-      myCell.messageTextLabel.text = myCell.messageText
-      
-      // blue gradient for message bubbles - WORK IN PROGRESS
-      // myCell.gradientImage.setGradientBackground(colorOne: UIColor(red: 0.0/255.0 , green: 125.0/255.0, blue: 255.0/255.0, alpha: 1.0) , colorTwo: UIColor(red: 150.0/255.0 , green: 190.0/255.0, blue: 255.0/255.0, alpha: 1.0))
+      myCell.messageText = messageModels[indexPath.row].messageText
+      myCell.isIncoming = messageModels[indexPath.row].isIncoming
       
       return myCell
     }

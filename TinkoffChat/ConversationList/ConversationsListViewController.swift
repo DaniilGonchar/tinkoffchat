@@ -64,7 +64,8 @@ class ConversationsListViewController: UIViewController {
     profileButton.tintColor = UIColor.gray
     navigationItem.rightBarButtonItem = profileButton
     
-    let themesButton = UIBarButtonItem(barButtonSystemItem: .edit , target: self, action: nil)
+    let themesButton = UIBarButtonItem(title: "Themes", style: .plain, target: self, action: #selector(self.themesButtonFunc) )
+    
     navigationItem.leftBarButtonItem = themesButton
     
   }
@@ -73,6 +74,9 @@ class ConversationsListViewController: UIViewController {
     self.performSegue(withIdentifier: "showProfileSegue", sender: self)
   }
   
+  @objc func themesButtonFunc(){
+    self.performSegue(withIdentifier: "presentThemesSegue", sender: self)
+  }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
@@ -80,7 +84,29 @@ class ConversationsListViewController: UIViewController {
       let chatViewController = segue.destination as! ConversationViewController
       
       chatViewController.recievedNameString = nameStringPressed!
+    } else if (segue.identifier == "presentThemesSegue") {
+      
+      let navVC = segue.destination as! UINavigationController
+      
+      if let themesViewControllerObjc = navVC.topViewController as? ThemesViewController {
+        themesViewControllerObjc.delegate = self
+      } else if let themesViewControllerSwift = navVC.topViewController as? ThemesSwiftViewController {
+        themesViewControllerSwift.closure = { logThemeChangingSwift }()
+      }
     }
+    
+  }
+  
+  func logThemeChanging(selectedTheme: UIColor) {
+    print(#function, selectedTheme)
+    UINavigationBar.appearance().barTintColor = selectedTheme
+    UserDefaults.standard.setColor(color: selectedTheme, forKey: "Theme")
+  }
+  
+  func logThemeChangingSwift(selectedTheme: ThemesSwift.Theme) -> Void {
+    print(#function, selectedTheme)
+    UINavigationBar.appearance().barTintColor = selectedTheme.barColor
+    UserDefaults.standard.setColor(color: selectedTheme.barColor, forKey: "Theme")
   }
   
   
@@ -162,6 +188,13 @@ extension ConversationsListViewController: UITableViewDataSource {
   
 }
 
+
+// MARK: - ThemesViewControllerDelegate
+extension ConversationsListViewController: ThemesViewControllerDelegate {
+  func themesViewController(_ controller: ThemesViewController!, didSelectTheme selectedTheme: UIColor!) {
+    logThemeChanging(selectedTheme: selectedTheme)
+  }
+}
 
 
 

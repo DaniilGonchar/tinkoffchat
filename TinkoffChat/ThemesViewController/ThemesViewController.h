@@ -10,12 +10,18 @@
 #import "ThemesViewControllerDelegate.h"
 #import "Themes.h"
 
-@interface ThemesViewController : UIViewController
+@interface ThemesViewController : UIViewController {
+  id<ThemesViewControllerDelegate> _delegate;
+  Themes *_model;
+}
 
-@property (assign, getter = getDelegate, setter = setDelegate:) id<ThemesViewControllerDelegate> delegate;
-@property (retain, getter = getModel, setter = setModel:) Themes* model;
+@property (nonatomic, assign) id<ThemesViewControllerDelegate> delegate;
+@property (nonatomic, retain) Themes *model;
 
+- (IBAction)changeThemeAction:(UIButton*)sender;
+- (IBAction)dismissAction:(id)sender;
 - (void)dealloc;
+
 
 @end
 

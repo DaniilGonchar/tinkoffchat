@@ -33,25 +33,48 @@
   
   if ([titleOfButton isEqualToString:@"Light"]) {
     
-    UIColor *themeOne = [[self getModel] getTheme1];
+    UIColor *themeOne = [[self model] theme1];
     [self.delegate themesViewController:self didSelectTheme: themeOne];
     self.view.backgroundColor = themeOne;
     
   } else if ([titleOfButton isEqualToString:@"Dark"]) {
     
-    UIColor *themeTwo = [[self getModel] getTheme2];
+    UIColor *themeTwo = [[self model] theme2];
     [self.delegate themesViewController:self didSelectTheme: themeTwo];
     self.view.backgroundColor = themeTwo;
     
   } else if ([titleOfButton isEqualToString:@"Champagne"]) {
     
-    UIColor *themeThree = [[self getModel] getTheme3];
+    UIColor *themeThree = [[self model] theme3];
     [self.delegate themesViewController:self didSelectTheme: themeThree];
     self.view.backgroundColor = themeThree;
     
   }
   
 }
+
+//messing with setter getter
+
+- (Themes *)model {
+  return _model;
+}
+
+- (void)setModel:(Themes *)model {
+  if (_model != model) {
+    [_model release];
+    _model = [model retain];
+  }
+}
+
+- (id<ThemesViewControllerDelegate>)delegate {
+  return _delegate;
+}
+
+- (void)setDelegate:(id<ThemesViewControllerDelegate>)delegate {
+  if (_delegate != delegate)
+    _delegate = delegate;
+}
+
 
 - (IBAction)dismissAction:(id)sender {
   [self dismissViewControllerAnimated: true completion: nil];

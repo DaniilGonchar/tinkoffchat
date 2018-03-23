@@ -8,13 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
-@interface Themes : NSObject
+@interface Themes : NSObject {
+  UIColor *_theme1, *_theme2, *_theme3;
+}
 
-@property (retain, getter = getTheme1, setter = setTheme1:) UIColor* theme1;
-@property (retain, getter = getTheme2, setter = setTheme2:) UIColor* theme2;
-@property (retain, getter = getTheme3, setter = setTheme3:) UIColor* theme3;
+@property (nonatomic, retain) UIColor* theme1;
+@property (nonatomic, retain) UIColor* theme2;
+@property (nonatomic, retain) UIColor* theme3;
 
-- (instancetype)initWithColorOne: (UIColor *) colorOne ColorTwo: (UIColor *) colorTwo colorThree: (UIColor *) colorThree;
+- (instancetype)initWithColorOne: (UIColor *) theme1 ColorTwo: (UIColor *) theme2 colorThree: (UIColor *) theme3;
 
 - (void)dealloc;
 

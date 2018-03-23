@@ -317,7 +317,7 @@
         <!--Select a perfect theme-->
         <scene sceneID="a7m-kh-FSn">
             <objects>
-                <viewController id="PhW-Wu-C5e" customClass="ThemesViewController" sceneMemberID="viewController">
+                <viewController id="PhW-Wu-C5e" customClass="ThemesSwiftViewController" customModule="TinkoffChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wE8-jZ-IBR">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

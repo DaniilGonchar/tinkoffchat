@@ -28,3 +28,18 @@ extension UserDefaults {
   }
   
 }
+
+
+extension UIButton {
+  
+  func shakeButton() {
+    let animation = CABasicAnimation(keyPath: "position")
+    animation.duration = 0.07
+    animation.repeatCount = 2
+    animation.autoreverses = true
+    animation.fromValue = NSValue(cgPoint: CGPoint.init(x: self.center.x - 5, y: self.center.y))
+    animation.toValue = NSValue(cgPoint: CGPoint.init(x: self.center.x + 5, y: self.center.y))
+    self.layer.add(animation, forKey: "position")
+  }
+  
+}

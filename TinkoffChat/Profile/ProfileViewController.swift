@@ -131,7 +131,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
   
   
   override func viewDidDisappear(_ animated: Bool) {
-    super.viewDidDisappear(animated)
+    super.viewDidDisappear(true)
     
     // removing keyboard observers
     NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)

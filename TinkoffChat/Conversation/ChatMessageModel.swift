@@ -8,12 +8,12 @@
 
 import Foundation
 
-
-struct ChatMessageModel {
+class ChatMessageModel: MessageCellConfiguration {
+  
   var messageText: String?
   var isIncoming: Bool
-  
-  
+
+
   init(messageText: String, isIncoming: Bool) {
     self.messageText = messageText
     self.isIncoming = isIncoming

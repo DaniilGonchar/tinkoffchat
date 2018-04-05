@@ -13,9 +13,8 @@ class ConversationsListViewController: UIViewController {
   
   @IBOutlet weak var tableView: UITableView!
   
-  var nameStringPressed: String?
-  var messageModels : [[MessageModel]] = []
-  
+  private var communicator: Communicator = MultipeerCommunicator()
+  private var communicationManager = CommunicationManager()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -23,40 +22,37 @@ class ConversationsListViewController: UIViewController {
     
     tableView.dataSource = self
     tableView.delegate = self
-    
-    // creating some messages for testing purposes as data source for tableview cells
-    //online category
-    let someOldDate = Date(timeIntervalSinceReferenceDate: 542412351)
-    let anotherOldDate = Date(timeIntervalSinceReferenceDate: 542325951)
-    
-    messageModels = [ [MessageModel]() , [MessageModel]() ]
-    
-    messageModels[0] = [ MessageModel(name: "Jack Douglas", message: "hey how is it going?", date: Date(), online: true, hasUnreadMessages: true) ,
-                         MessageModel(name: "Sam Smith", message: "got it.", date: Date(), online: true, hasUnreadMessages: false) ,
-                         MessageModel(name: "Sonia Aldred", message: "txt(debug:online,no unread)", date: Date(), online: true, hasUnreadMessages: false) ,
-                         MessageModel(name: "Tyreece Barrow", message: "txt(debug:online,has unread)", date: Date(), online: true, hasUnreadMessages: true) ,
-                         MessageModel(name: "Zeshan Devlin",  message: "ut labore et dolore magna ", date: someOldDate, online: true, hasUnreadMessages: false) ,
-                         MessageModel(name: "Rea Sharma", message: "ut labore et dolore magna ", date: anotherOldDate, online: true, hasUnreadMessages: false) ,
-                         MessageModel(name: "August Ventura Long Long Name", message: "quis nostrud exercitation ", date: Date(), online: true, hasUnreadMessages: false) ,
-                         MessageModel(name: "Lea Ratliff", message: "in reprehenderit in voluptate ", date: Date(), online: true, hasUnreadMessages: false) ,
-                         MessageModel(name: "Willis Duggan",  date: Date(), online: true, hasUnreadMessages: false) ,
-                         MessageModel(name: "Darlene Knowles", date: Date(), online: true, hasUnreadMessages: false) ]
-    
-    // history category
-    messageModels[1] = [ MessageModel(name: "Mary Black", message: "i have seen it!", date: Date(), online: false, hasUnreadMessages: true) ,
-                         MessageModel(name: "Jay Baldwin", message: "man it looks gorgeous", date: Date(), online: false, hasUnreadMessages: false) ,
-                         MessageModel(name: "Kim Mack Really long name thing", message: "another offline msg", date: anotherOldDate, online: false, hasUnreadMessages: false) ,
-                         MessageModel(name: "John Lee", message:"txt(debug:offline,no unread)", date: Date(), online: false, hasUnreadMessages: false),
-                         MessageModel(name: "Tabatha Haworth Name Is so Long it wont fit", message: "txt(debug:ofline,has unread)", date: Date(), online: false, hasUnreadMessages: true) ,
-                         MessageModel(name: "Jonas Walsh", message: "delectus legendos est te, ne habeo", date: someOldDate, online: false, hasUnreadMessages: false) ,
-                         MessageModel(name: "Kieron Wilkerson", message: "Quot tollit atomorum ea sed", date: Date(), online: false, hasUnreadMessages: false) ,
-                         MessageModel(name: "Abdul Barclay", message: "et dico iracundia vix", date: Date(), online: false, hasUnreadMessages: true) ,
-                         MessageModel(name: "Kelan Morrison", message: "Sale primis quo no", date: Date(), online: false, hasUnreadMessages: true) ,
-                         MessageModel(name: "Rehaan Larson", message: "eam cu persecuti intellegebat", date: Date(), online: false, hasUnreadMessages: false) ]
+    communicator.delegate = communicationManager
     
     setupNavigationBarItems()
+  }
+  
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(true)
+    
+    // adding observers
+    NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: Notification.Name("ConversationsListReloadData"), object: nil)
+    
+    tableView.reloadData()  // this is needed due to lifecycle
     
   }
+  
+  
+  @objc private func reloadData() {
+    DispatchQueue.main.async {
+      self.tableView.reloadData()
+    }
+  }
+  
+  
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(true)
+    
+    // removing observers
+    NotificationCenter.default.removeObserver(self, name: Notification.Name("ConversationsListReloadData"), object: nil)
+  }
+  
   
   private func setupNavigationBarItems(){
     
@@ -70,20 +66,29 @@ class ConversationsListViewController: UIViewController {
     
   }
   
+  
   @objc func profileButtonFunc(){
     self.performSegue(withIdentifier: "showProfileSegue", sender: self)
   }
+  
   
   @objc func themesButtonFunc(){
     self.performSegue(withIdentifier: "presentThemesSegue", sender: self)
   }
   
+  
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
     if (segue.identifier == "showChatSegue") {
-      let chatViewController = segue.destination as! ConversationViewController
+      if let chatViewController = segue.destination as? ConversationViewController{
+        
+        if let indexPath = tableView.indexPathForSelectedRow {
+          
+          chatViewController.communicator = communicator
+          chatViewController.conversation = communicationManager.conversations[indexPath.section][indexPath.row]
+        }
+      }
       
-      chatViewController.recievedNameString = nameStringPressed!
     } else if (segue.identifier == "presentThemesSegue") {
       
       let navVC = segue.destination as! UINavigationController
@@ -94,14 +99,15 @@ class ConversationsListViewController: UIViewController {
         themesViewControllerSwift.closure = { logThemeChangingSwift }()
       }
     }
-    
   }
+  
   
   func logThemeChanging(selectedTheme: UIColor) {
     print(#function, selectedTheme)
     UINavigationBar.appearance().barTintColor = selectedTheme
     UserDefaults.standard.setColor(color: selectedTheme, forKey: "Theme")
   }
+  
   
   func logThemeChangingSwift(selectedTheme: ThemesSwift.Theme) -> Void {
     print(#function, selectedTheme)
@@ -118,15 +124,11 @@ class ConversationsListViewController: UIViewController {
 }
 
 
+
 // MARK: - UITableViewDelegate
 extension ConversationsListViewController: UITableViewDelegate {
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    // row was selected
-    self.tableView.deselectRow(at: indexPath, animated: true)
-    
-    nameStringPressed = messageModels[indexPath.section][indexPath.row].name
-    
     self.performSegue(withIdentifier: "showChatSegue" , sender: self)
   }
   
@@ -138,11 +140,12 @@ extension ConversationsListViewController: UITableViewDelegate {
 }
 
 
+
 // MARK: - UITableViewDataSource
 extension ConversationsListViewController: UITableViewDataSource {
   
   func numberOfSections(in tableView: UITableView) -> Int {
-    return messageModels.count
+    return communicationManager.conversations.count
   }
   
   
@@ -156,37 +159,33 @@ extension ConversationsListViewController: UITableViewDataSource {
   
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    if (section == 0) {
-      // "online" section
-      return messageModels[0].count
-    } else {
-      // "offline" section
-      return messageModels[1].count
-    }
+    return communicationManager.conversations[section].count
   }
   
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    var conversationCell: ConversationCell
     
-    let conversationListCell = tableView.dequeueReusableCell(withIdentifier: "listCell") as! ConversationCell
-    
-    let temporaryTestMessage: MessageModel
-    if (indexPath.section == 0 ) {
-      temporaryTestMessage = messageModels[0][indexPath.row]
+    if let conversationListCell = tableView.dequeueReusableCell(withIdentifier: "listCell") as? ConversationCell {
+      // success
+      conversationCell = conversationListCell
     } else {
-      temporaryTestMessage = messageModels[1][indexPath.row]
+      // if deque failed
+      conversationCell = ConversationCell(style: .default, reuseIdentifier: "listCell")
     }
     
-    conversationListCell.message = temporaryTestMessage.message
-    conversationListCell.date = temporaryTestMessage.date
-    conversationListCell.name = temporaryTestMessage.name
-    conversationListCell.hasUnreadMessages = temporaryTestMessage.hasUnreadMessages
-    conversationListCell.online = temporaryTestMessage.online
+    let retrievedConversation = communicationManager.conversations[indexPath.section][indexPath.row]
+    conversationCell.name = retrievedConversation.name
+    conversationCell.message = retrievedConversation.message
+    conversationCell.date = retrievedConversation.date
+    conversationCell.online = retrievedConversation.online
+    conversationCell.hasUnreadMessages = retrievedConversation.hasUnreadMessages
     
-    return conversationListCell
+    return conversationCell
   }
   
 }
+
 
 
 // MARK: - ThemesViewControllerDelegate

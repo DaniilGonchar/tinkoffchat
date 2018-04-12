@@ -32,8 +32,8 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
   
   @IBOutlet weak var activityIndicator : UIActivityIndicatorView!
   
-  
   private var profile = Profile()
+  
   var dataManager: DataManagerProtocol = StorageManager()
   
   private var dataWasChanged: Bool {
@@ -152,7 +152,8 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     
-    //NotificationCenter.default.addObserver(self, selector: #selector(keyboardInputModeDidChange), name: .UITextInputCurrentInputModeDidChange, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(inputModeDidChange), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
+    
     
   }
   
@@ -164,14 +165,32 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
     NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     
-   // NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UITextInputCurrentInputModeDidChange, object: nil)
+    NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
     
   }
   
   
- 
+  func isEmojiKeyboard() -> Bool {
+    return textInputMode?.primaryLanguage == "emoji" || textInputMode?.primaryLanguage == nil
+  }
+  
+  
+  @objc func inputModeDidChange(sender: NSNotification) {
+    
+    if isEmojiKeyboard(){
+      print("fucker is emoji")
+      view.frame.origin.y += 216.0
+    }
+    
+  }
+  
   
   @objc func keyboardWillShow(sender: NSNotification) {
+    if view.frame.origin.y < 0.0 {
+      view.frame.origin.y += 42.0
+      return
+    }
+    
     if let keyboardSize = (sender.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
       view.frame.origin.y -= keyboardSize.height
     }
@@ -179,9 +198,15 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
   
   
   @objc func keyboardWillHide(sender: NSNotification) {
-    if view.frame.origin.y >= 0 {
+    if isEmojiKeyboard(){
+      view.frame.origin.y += 42.0
       return
     }
+    
+    if view.frame.origin.y >= 0.0 {
+      return
+    }
+    
     if let keyboardSize = (sender.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
       view.frame.origin.y += keyboardSize.height
     }

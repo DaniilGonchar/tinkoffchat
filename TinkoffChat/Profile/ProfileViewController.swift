@@ -12,47 +12,48 @@ import UIKit
 class ProfileViewController: UIViewController, UINavigationControllerDelegate {
   
   @IBOutlet weak var editButton: UIButton!
-  @IBOutlet var gcdButton: UIButton!
-  @IBOutlet var operationButton: UIButton!
+  @IBOutlet weak var saveButton: UIButton!
+  
   @IBOutlet weak var addPicButton: UIButton!
   
   @IBOutlet weak var userImage: UIImageView!
   
-  @IBOutlet weak var nameLabel: UILabel!
-  @IBOutlet var provideBioLabel: UILabel!
-  @IBOutlet weak var descriptionLabel: UILabel!
+  @IBOutlet var nameTextField: UITextField! {
+    didSet {
+      nameTextField.layer.borderColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+    }
+  }
   
-  @IBOutlet var nameTextField: UITextField!
-  @IBOutlet var bioTextField: UITextField!
+  @IBOutlet var bioTextView: UITextView! {
+    didSet {
+      bioTextView.layer.borderColor = #colorLiteral(red: 0.9999960065, green: 1, blue: 1, alpha: 1)
+    }
+  }
   
   @IBOutlet weak var activityIndicator : UIActivityIndicatorView!
   
-  var editingMode: Bool = false {
-    didSet {
-      self.setEditingState(editing: editingMode)
-    }
-  }
   
-  private var profile : Profile?
-  var dataManager: DataManagerProtocol? = GCDDataManager()
-  
-  private var saveChanges: ( () -> Void )?
+  private var profile = Profile()
+  var dataManager: DataManagerProtocol = StorageManager()
   
   private var dataWasChanged: Bool {
     get{
-      return self.profile?.nameChanged ?? false || self.profile?.bioChanged ?? false || self.profile?.imageChanged ?? false
+      return self.profile.name != nameTextField.text || self.profile.bio != bioTextView.text || profile.image != userImage.image
     }
   }
   
+  private var userIsInEditingMode: Bool = false
+  
   
   @IBAction func editPicAction(_ sender: Any) {
-    print("Выбери изображение профиля")
     
-    if !self.editingMode {
+    if !userIsInEditingMode {
       print("User tried to change image not in editing mode!")
       addPicButton.shakeButton()
       return;
     }
+    
+    print("Выбери изображение профиля")
     
     let imagePickerController = UIImagePickerController()
     imagePickerController.delegate = self
@@ -87,18 +88,9 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     super.viewDidLoad()
     
     // Do any additional setup after loading the view, typically from a nib.
-    editButton.layer.borderWidth = 2
-    editButton.layer.cornerRadius = 15
-    gcdButton.layer.borderWidth = 2
-    gcdButton.layer.cornerRadius = 15
-    operationButton.layer.borderWidth = 2
-    operationButton.layer.cornerRadius = 15
-    
-    bioTextField.delegate = self
-    nameTextField.delegate = self
-    
-    descriptionLabel.lineBreakMode = .byWordWrapping
-    descriptionLabel.numberOfLines = 0;
+    activityIndicator.layer.cornerRadius = activityIndicator.frame.size.width / 2
+    activityIndicator.startAnimating()
+    saveButton.isHidden = true
     
     userImage.layer.cornerRadius = addPicButton.frame.size.width / 2
     self.userImage.layer.masksToBounds = true
@@ -110,13 +102,46 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     
     navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done , target: self, action: #selector(closeProfileVC))
     
-    // hw5:
-    nameTextField.autocorrectionType = UITextAutocorrectionType.no
-    bioTextField.autocorrectionType = UITextAutocorrectionType.no
+    //hw7
+    nameTextField.delegate = self
+    nameTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     
-    self.editingMode = false
-    self.loadFromFile()
-  
+    bioTextView.delegate = self
+    
+    // disabling edit button while initially loading profile data
+    editButton.isEnabled = false
+    editButton.alpha = 0.3
+    
+    handleSaveButtonStyle(canSave: dataWasChanged)
+    
+    dataManager.loadProfile { [weak self] profile, error in
+      guard error == nil, let profile = profile else {
+        
+        
+        self?.activityIndicator.stopAnimating()
+        return
+      }
+      
+      self?.profile = profile
+      
+      if let name = profile.name {
+        self?.nameTextField.text = name
+      }
+      
+      if let bio = profile.bio {
+        self?.bioTextView.text = bio
+      }
+      
+      if let picture = profile.image {
+        self?.userImage.image = picture
+      }
+      
+      self?.editButton.alpha = 1
+      self?.editButton.isEnabled = true
+      
+      self?.activityIndicator.stopAnimating()
+    }
+    
   }
   
   
@@ -125,7 +150,9 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     
     // adding keyboard observers
     NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(sender:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    
+    //NotificationCenter.default.addObserver(self, selector: #selector(keyboardInputModeDidChange), name: .UITextInputCurrentInputModeDidChange, object: nil)
     
   }
   
@@ -136,20 +163,28 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     // removing keyboard observers
     NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
     NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    
+   // NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UITextInputCurrentInputModeDidChange, object: nil)
+    
   }
   
   
-  @objc func keyboardWillShow(_ notification: NSNotification) {
-    if let keyboardFrame: NSValue = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue {
-      let keyboardHeight = keyboardFrame.cgRectValue.height
-      self.view.frame.origin.y = -keyboardHeight + 66
-      print("keyboard height is:" , keyboardHeight)
+ 
+  
+  @objc func keyboardWillShow(sender: NSNotification) {
+    if let keyboardSize = (sender.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+      view.frame.origin.y -= keyboardSize.height
     }
   }
   
   
   @objc func keyboardWillHide(sender: NSNotification) {
-    self.view.frame.origin.y = 64 
+    if view.frame.origin.y >= 0 {
+      return
+    }
+    if let keyboardSize = (sender.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+      view.frame.origin.y += keyboardSize.height
+    }
   }
   
   
@@ -164,118 +199,80 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
   }
   
   
+  func handleSaveButtonStyle(canSave: Bool) {
+    if ( canSave ) {
+      saveButton.alpha = 1
+    } else {
+      saveButton.alpha = 0.3
+    }
+    saveButton.isEnabled = canSave
+  }
+  
+  
   @IBAction func editButtonPressed(_ sender: Any) {
     print("edit profile button pressed")
     
-    self.editingMode = true
-    self.setEnabledState(enabled: false)
+    userIsInEditingMode = true
+    handleSaveButtonStyle(canSave: false)
+    
+    editButton.isHidden = true
+    saveButton.isHidden = false
+    
+    nameTextField.isUserInteractionEnabled = true
+    nameTextField.layer.borderColor = #colorLiteral(red: 0.623427469, green: 0.623427469, blue: 0.623427469, alpha: 1)
+    
+    bioTextView.isEditable = true
+    bioTextView.layer.borderColor = #colorLiteral(red: 0.623427469, green: 0.623427469, blue: 0.623427469, alpha: 1)
     
   }
   
   
-  private func loadFromFile() {
-    self.dataManager?.loadProfile(completion: { (profile) in
-      if let unwrappedProfile = profile {
-        self.profile = unwrappedProfile
-      }
-      
-      self.userImage.image = profile?.image ?? UIImage.init(named: "placeholder-user")
-      self.nameLabel.text = profile?.name ?? "Введите имя"
-      self.descriptionLabel.text = profile?.bio ?? "Расскажите о себе"
-      
-      
-      self.profile = Profile(name: self.nameLabel.text, bio: self.descriptionLabel.text, image: self.userImage.image)
-
-    })
+  @IBAction func saveButtonPressed(_ sender: Any) {
+    activityIndicator.startAnimating()
     
+    view.endEditing(true)
     
-  }
-  
-  
-  @IBAction func saveButtonsPressed(_ sender: UIButton) {
-    self.nameTextField.resignFirstResponder()
-    self.bioTextField.resignFirstResponder()
+    handleSaveButtonStyle(canSave: false)
     
-    self.saveChanges = {
-      
-      self.activityIndicator.startAnimating()
-      self.setEnabledState(enabled: false)
-      
-      self.profile?.name = self.nameTextField.text
-      self.profile?.bio = self.bioTextField.text
-      self.profile?.image = self.userImage.image
-      
-      let titleOfButton = sender.titleLabel?.text
-      
-      if titleOfButton == "Operation" {
-        self.dataManager = OperationDataManager()
+    if nameTextField.text != profile.name {
+      profile.name = nameTextField.text
+    }
+    
+    if bioTextView.text != profile.bio {
+      profile.bio = bioTextView.text
+    }
+    
+    if userImage.image != profile.image {
+      profile.image = userImage.image
+    }
+    
+    dataManager.saveProfile(profile) { [weak self] error in
+      if error == nil {
+        self?.showSuccessAlert()
       } else {
-        self.dataManager = GCDDataManager()
+        self?.showErrorAlert()
       }
       
+      self?.activityIndicator.stopAnimating()
       
-      self.dataManager?.saveProfile(profile: self.profile!, completion: { (saveSucceeded : Bool) in
-        
-        self.activityIndicator.stopAnimating()
-        
-        if saveSucceeded {
-          self.showSuccessAlert()
-          self.loadFromFile()
-        } else {
-          self.showErrorAlert()
-        }
-        
-        self.setEnabledState(enabled: true)
-        self.editingMode = !saveSucceeded
-      })
+      self?.saveButton.isHidden = true
+      self?.editButton.isHidden = false
+      
+      self?.nameTextField.isUserInteractionEnabled = false
+      
+      
+      self?.bioTextView.isEditable = false
+      
+      self?.nameTextField.layer.borderColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+      self?.bioTextView.layer.borderColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
     }
-    
-    self.saveChanges?();
-  }
-  
-  
-  @IBAction func usernameChangedByEditing(_ sender: UITextField) {
-    if let newName = sender.text {
-      self.profile?.nameChanged = (newName != (self.profile?.name ?? ""))
-      self.setEnabledState(enabled: self.dataWasChanged)
-    }
-  }
-  
-  
-  @IBAction func bioChangedByEditing(_ sender: UITextField) {
-    if let newBio = sender.text {
-      self.profile?.bioChanged = (newBio != (self.profile?.bio ?? ""))
-      self.setEnabledState(enabled: self.dataWasChanged)
-    }
-  }
-  
-  
-  private func setEditingState(editing: Bool) {
-    if(editing) {
-      self.nameLabel.text = "Введите имя"
-    }
-    
-    self.editButton.isHidden = editing
-    self.gcdButton.isHidden = !editing
-    self.operationButton.isHidden = !editing
-    
-    self.descriptionLabel.isHidden = editing
-    self.nameTextField.isHidden = !editing
-    
-    self.bioTextField.isHidden = !editing
-    self.provideBioLabel.isHidden = !editing
-  
-  }
-  
-  
-  private func setEnabledState(enabled: Bool) {
-    self.gcdButton.isEnabled = enabled
-    self.operationButton.isEnabled = enabled
+    userIsInEditingMode = false
   }
   
   
   private func showSuccessAlert() {
     let alertController = UIAlertController(title: "Changes saved!", message: nil, preferredStyle: .alert)
+    alertController.view.tintColor = UIColor.black
     alertController.addAction(UIAlertAction(title: "Done", style: .default, handler: nil))
     self.present(alertController, animated: true, completion: nil)
   }
@@ -283,15 +280,13 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
   
   private func showErrorAlert() {
     let alertController = UIAlertController(title: "Error", message: "could not save data", preferredStyle: .alert)
+    alertController.view.tintColor = UIColor.black
     alertController.addAction(UIAlertAction(title: "Done", style: .cancel, handler: nil))
     alertController.addAction(UIAlertAction(title: "Retry", style: .default) { action in
-      self.saveChanges?();
+      self.saveButtonPressed(self);
     })
     self.present(alertController, animated: true, completion: nil)
   }
-  
-  
-  
   
   
   override func didReceiveMemoryWarning() {
@@ -307,18 +302,10 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
 extension ProfileViewController: UIImagePickerControllerDelegate {
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
     // setting image in the UIImageView
+    
     if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
       self.userImage.image = image
-      
-      if let savedImage = self.profile?.image {
-        let newImage = UIImagePNGRepresentation(image)!
-        let oldImage = UIImagePNGRepresentation(savedImage)!
-        self.profile?.imageChanged = !newImage.elementsEqual(oldImage)
-      } else {
-        self.profile?.imageChanged = true
-      }
-      
-      self.setEnabledState(enabled: self.dataWasChanged)
+      handleSaveButtonStyle(canSave: dataWasChanged)
     } else {
       // error occured
       print("Error picking image")
@@ -332,6 +319,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate {
     // dismissing UIImagePickerController
     picker.dismiss(animated: true, completion: nil)
   }
+  
 }
 
 
@@ -352,13 +340,24 @@ extension ProfileViewController: UITextFieldDelegate {
     return newLength <= 100
   }
   
+  
+  // user edited text field
+  @objc func textFieldDidChange(_ textField: UITextField) {
+    handleSaveButtonStyle(canSave: dataWasChanged)
+  }
+  
 }
 
 
 
-
-
-
+// MARK: - UITextViewDelegate
+extension ProfileViewController: UITextViewDelegate {
+  // user edited text view
+  @objc func textViewDidChange(_ textView: UITextView) {
+    handleSaveButtonStyle(canSave: dataWasChanged)
+  }
+  
+}
 
 
 

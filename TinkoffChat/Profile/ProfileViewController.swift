@@ -178,7 +178,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
   @objc func inputModeDidChange(sender: NSNotification) {
     
     if isEmojiKeyboard(){
-      print("fucker is emoji")
+      print("is emoji")
       view.frame.origin.y += 216.0
     }
     

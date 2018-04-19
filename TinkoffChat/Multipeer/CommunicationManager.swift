@@ -10,78 +10,79 @@ import Foundation
 
 class CommunicationManager: CommunicatorDelegate {
   
-  var conversations = [[Conversation]]()
-  
-  
-  init() {
-    // two sections
-    conversations.append([Conversation]())
-    conversations.append([Conversation]())
-    
-    // adding observer
-    NotificationCenter.default.addObserver(self, selector: #selector(sortConversationsData), name: Notification.Name("ConversationsListSortData"), object: nil)
-  }
-  
-  
-  @objc private func sortConversationsData() {
-    conversations[0].sort(by: Conversation.sortByDate)
-  }
-  
-  
-  deinit {
-    // removing observer
-    NotificationCenter.default.removeObserver(self, name: Notification.Name("ConversationsListSortData"), object: nil)
-  }
-  
-  
   func didFoundUser(userID: String, userName: String?) {
-    guard conversations[0].index(where: { (item) -> Bool in item.id == userID }) == nil else {
+    
+    let conversation = Conversation.withId(conversationId: userID)
+    guard conversation == nil else {
+      conversation?.isOnline = true
+      CoreDataService.shared.save()
       return
     }
     
-    conversations[0].append(Conversation(id: userID,
-                                         name: userName,
-                                         message: nil,
-                                         messages: [ChatMessageModel](),
-                                         date: nil,
-                                         online: true,
-                                         hasUnreadMessages: false))
-    conversations[0].sort(by: Conversation.sortByDate)
+    let user: User = CoreDataService.shared.add(.user)
+    user.userId = userID
+    user.name = userName
     
-    NotificationCenter.default.post(name: Notification.Name("ConversationsListReloadData"), object: nil)
+    user.isOnline = true
+    
+    let chat: Conversation = CoreDataService.shared.add(.conversation)
+    
+    chat.conversationId = userID
+    chat.interlocutor = user
+    
+    chat.hasUnreadMessages = false
+    chat.profileEntity = nil
+    chat.lastMessage = nil
+    chat.isOnline = true
+    
+    user.addToConversations(chat)
+    
+    CoreDataService.shared.save()
+    
   }
   
   
   func didLostUser(userID: String) {
-    if let index = conversations[0].index(where: { (item) -> Bool in item.id == userID }) {
-      conversations[0].remove(at: index)
-      
-      NotificationCenter.default.post(name: Notification.Name("ConversationsListReloadData"), object: nil)
-      
-      NotificationCenter.default.post(name: Notification.Name("ConversationTurnSendOff"), object: nil)
+  
+    guard let user = User.withId(userId: userID), let conversation = Conversation.withId(conversationId: userID) else {
+      return
     }
+    
+    if conversation.lastMessage != nil {
+      conversation.isOnline = false
+    } else {
+      CoreDataService.shared.delete(conversation)
+      CoreDataService.shared.delete(user)
+    }
+    
+    CoreDataService.shared.save()
+    
   }
   
   
   func didReceiveMessage(text: String, fromUser: String, toUser: String) {
-    if let index = conversations[0].index(where: { (item) -> Bool in item.id == fromUser }) {
-      
-      conversations[0][index].messages.insert(ChatMessageModel(messageText: text, isIncoming: true), at: 0)
-      
-      conversations[0][index].date = Date()
-      conversations[0][index].hasUnreadMessages = true
-      conversations[0][index].message = conversations[0][index].messages.first?.messageText
-      
-      conversations[0].sort(by: Conversation.sortByDate)
-      
-      
-      NotificationCenter.default.post(name: Notification.Name("ConversationsListReloadData"), object: nil)
-      NotificationCenter.default.post(name: Notification.Name("ConversationReloadData"), object: nil)
+    
+    guard let conversation = Conversation.withId(conversationId: fromUser) else {
+      return
     }
+    
+    let message: Message = CoreDataService.shared.add(.message)
+    message.messageId = Message.generateMessageId()
+    message.isIncoming = true
+    message.messageText = text
+    message.date = Date()
+    message.conversation = conversation
+    message.lastMessageInConversation = conversation
+    
+    conversation.hasUnreadMessages = true
+    
+    CoreDataService.shared.save()
+    
   }
   
   
   func failedToStartBrowsingForUsers(error: Error) {
+    print("Failed To Start Browsing For Users:",error.localizedDescription)
     let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
     alertController.addAction(UIAlertAction(title: "Done", style: .cancel))
     alertController.present(alertController, animated: true, completion: nil)
@@ -89,8 +90,10 @@ class CommunicationManager: CommunicatorDelegate {
   
   
   func failedToStartAdvertising(error: Error) {
+    print("Failed To Start Advertising:",error.localizedDescription)
     let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
     alertController.addAction(UIAlertAction(title: "Done", style: .cancel))
     alertController.present(alertController, animated: true, completion: nil)
   }
+  
 }

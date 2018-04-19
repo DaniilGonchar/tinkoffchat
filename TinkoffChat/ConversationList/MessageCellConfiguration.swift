@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 protocol MessageCellConfiguration {
   var messageText: String? {get set}
   var isIncoming: Bool {get set}

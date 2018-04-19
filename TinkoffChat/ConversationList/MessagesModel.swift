@@ -8,27 +8,8 @@
 
 import Foundation
 
-struct MessageModel {
-  var name: String?
-  var message: String?
-  var date: Date?
-  var online: Bool
-  var hasUnreadMessages: Bool
-  
-  
-  init(name: String, message: String , date: Date, online: Bool, hasUnreadMessages: Bool) {
-    self.name = name
-    self.message = message
-    self.date = date
-    self.online = online
-    self.hasUnreadMessages = hasUnreadMessages
-  }
-  
-  // init without message
-  init(name: String, date: Date, online: Bool, hasUnreadMessages: Bool) {
-    self.name = name
-    self.date = date
-    self.online = online
-    self.hasUnreadMessages = hasUnreadMessages
+extension Message: MessageCellConfiguration {
+  class func generateMessageId() -> String {
+    return "\(arc4random_uniform(UINT32_MAX))+\(Date.timeIntervalSinceReferenceDate)".data(using: .utf8)!.base64EncodedString()
   }
 }

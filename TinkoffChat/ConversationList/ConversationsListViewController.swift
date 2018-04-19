@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 
 class ConversationsListViewController: UIViewController {
@@ -14,7 +15,12 @@ class ConversationsListViewController: UIViewController {
   @IBOutlet weak var tableView: UITableView!
   
   private var communicator: Communicator = MultipeerCommunicator()
-  private var communicationManager = CommunicationManager()
+  private var communicationManager: CommunicatorDelegate = CommunicationManager()
+  
+  private var fetchedResultsController: NSFetchedResultsController<Conversation>!
+  private var frcManager = FRCManager()
+  private var controlsDelegate: AllowControlsDelegate?
+  
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -23,6 +29,21 @@ class ConversationsListViewController: UIViewController {
     tableView.dataSource = self
     tableView.delegate = self
     communicator.delegate = communicationManager
+    
+    let fetchRequest: NSFetchRequest<Conversation> = CoreDataService.shared.getAll(.conversation)
+    
+    let onlineSortDescriptor = NSSortDescriptor(key: "isOnline", ascending: false)
+    let dateSortDescriptor = NSSortDescriptor(key: "lastMessage.date", ascending: false)
+    let nameSortDescriptor = NSSortDescriptor(key: "interlocutor.name", ascending: true)
+    
+    fetchRequest.sortDescriptors = [onlineSortDescriptor, dateSortDescriptor, nameSortDescriptor]
+    
+    frcManager.delegate = tableView
+    
+    fetchedResultsController = CoreDataService.shared.setupFRC(fetchRequest, frcManager: frcManager)
+    CoreDataService.shared.fetchData(fetchedResultsController)
+    
+    fetchedResultsController?.fetchedObjects?.forEach({ $0.isOnline = false })
     
     setupNavigationBarItems()
   }
@@ -80,12 +101,14 @@ class ConversationsListViewController: UIViewController {
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
     if (segue.identifier == "showChatSegue") {
-      if let chatViewController = segue.destination as? ConversationViewController{
+      if let chatViewController = segue.destination as? ConversationViewController {
         
         if let indexPath = tableView.indexPathForSelectedRow {
+          controlsDelegate = chatViewController
+          controlsDelegate?.conversation = fetchedResultsController?.object(at: indexPath)
           
           chatViewController.communicator = communicator
-          chatViewController.conversation = communicationManager.conversations[indexPath.section][indexPath.row]
+          chatViewController.navigationItem.title = controlsDelegate?.conversation.interlocutor?.name
         }
       }
       
@@ -145,21 +168,20 @@ extension ConversationsListViewController: UITableViewDelegate {
 extension ConversationsListViewController: UITableViewDataSource {
   
   func numberOfSections(in tableView: UITableView) -> Int {
-    return communicationManager.conversations.count
-  }
-  
-  
-  func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    if (section == 0) {
-      return "Online"
-    } else {
-      return "History"
+    guard let sectionsCount = fetchedResultsController?.sections?.count else {
+      return 0
     }
+    
+    return sectionsCount
   }
   
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return communicationManager.conversations[section].count
+    guard let sections = fetchedResultsController?.sections else {
+      return 0
+    }
+    
+    return sections[section].numberOfObjects
   }
   
   
@@ -174,12 +196,24 @@ extension ConversationsListViewController: UITableViewDataSource {
       conversationCell = ConversationCell(style: .default, reuseIdentifier: "listCell")
     }
     
-    let retrievedConversation = communicationManager.conversations[indexPath.section][indexPath.row]
-    conversationCell.name = retrievedConversation.name
-    conversationCell.message = retrievedConversation.message
-    conversationCell.date = retrievedConversation.date
-    conversationCell.online = retrievedConversation.online
-    conversationCell.hasUnreadMessages = retrievedConversation.hasUnreadMessages
+    
+    
+    if let retrievedConversation = fetchedResultsController?.object(at: indexPath) {
+      if let interlocutor = retrievedConversation.interlocutor {
+        conversationCell.name = interlocutor.name
+      }
+      
+      conversationCell.online = retrievedConversation.isOnline
+      conversationCell.date = retrievedConversation.lastMessage?.date ?? nil
+      conversationCell.message = retrievedConversation.lastMessage?.messageText ?? nil
+      conversationCell.hasUnreadMessages = retrievedConversation.hasUnreadMessages
+      
+      if retrievedConversation.isOnline && retrievedConversation == controlsDelegate?.conversation {
+        controlsDelegate?.turnControlsOn()
+      } else {
+        controlsDelegate?.turnControlsOff()
+      }
+    }
     
     return conversationCell
   }
@@ -195,6 +229,12 @@ extension ConversationsListViewController: ThemesViewControllerDelegate {
   }
 }
 
+
+
+// MARK: - ConversationDelegate
+extension UITableView: ConversationDelegate {
+  // this stub fixes line: "frcManager.delegate = tableView"
+}
 
 
 

@@ -8,6 +8,7 @@
 
 
 import Foundation
+import UIKit
 
 extension UserDefaults {
   
@@ -30,6 +31,7 @@ extension UserDefaults {
 }
 
 
+
 extension UIButton {
   
   func shakeButton() {
@@ -40,6 +42,32 @@ extension UIButton {
     animation.fromValue = NSValue(cgPoint: CGPoint.init(x: self.center.x - 5, y: self.center.y))
     animation.toValue = NSValue(cgPoint: CGPoint.init(x: self.center.x + 5, y: self.center.y))
     self.layer.add(animation, forKey: "position")
+  }
+  
+}
+
+
+
+protocol IDataProviderDelegate: class {
+  func beginUpdates()
+  func endUpdates()
+  
+  func insertRows(at indexPaths: [IndexPath], with animation: UITableViewRowAnimation)
+  func deleteRows(at indexPaths: [IndexPath], with animation: UITableViewRowAnimation)
+  func reloadRows(at indexPaths: [IndexPath], with animation: UITableViewRowAnimation)
+}
+
+extension UITableView: IDataSourceDelegate {
+  // UITableView used as a IDataSourceDelegate protocol object
+}
+
+
+
+extension Message: MessageCellConfiguration {
+  
+  @nonobjc class func generateMessageId() -> String {
+    return "\(arc4random_uniform(UINT32_MAX))+\(Date.timeIntervalSinceReferenceDate)"
+      .data(using: .utf8)!.base64EncodedString()
   }
   
 }

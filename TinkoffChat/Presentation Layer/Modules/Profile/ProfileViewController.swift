@@ -42,10 +42,12 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
   
   // MARK: - Dependencies
   private var model: IAppUserModel
+  private let presentationAssembly: IPresentationAssembly
   
   // MARK: - Initializers
-  init(model: IAppUserModel) {
+  init(model: IAppUserModel, presentationAssembly: IPresentationAssembly) {
     self.model = model
+    self.presentationAssembly = presentationAssembly
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -86,6 +88,19 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
       self.present(imagePickerController, animated: true, completion: nil)
     }))
     
+    actionSheetAlertController.addAction(UIAlertAction(title: "Загрузить", style: .default, handler: {(action:UIAlertAction) in
+      // handling load images from network api option
+      let controller = self.presentationAssembly.picturesViewController()
+      
+      controller.collectionPickerDelegate = self
+      
+      let navigationController = UINavigationController()
+      navigationController.viewControllers = [controller]
+      
+      self.present(navigationController, animated: true)
+      
+    }))
+    
     actionSheetAlertController.addAction(UIAlertAction(title: "Отмена", style: .cancel, handler: nil))
     
     self.present(actionSheetAlertController, animated: true, completion: nil)
@@ -102,8 +117,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     
     addPicButton.imageEdgeInsets = UIEdgeInsetsMake(12, 12, 12, 12)
     addPicButton.layer.cornerRadius = addPicButton.frame.size.width / 2
-    
-    self.navigationItem.title = "Profile"
     
     navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done , target: self, action: #selector(closeProfileVC))
         
@@ -158,7 +171,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     // adding keyboard observers
     NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-    
+
     NotificationCenter.default.addObserver(self, selector: #selector(inputModeDidChange), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
     
   }
@@ -170,16 +183,16 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     // removing keyboard observers
     NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
     NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-    
+
     NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
     
   }
   
   
   private func setupNavbar() {
-    navigationItem.title = "Profile"
+    self.navigationItem.title = "Профиль"
     
-    let leftItem = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(closeProfileVC))
+    let leftItem = UIBarButtonItem(title: "Назад", style: .plain, target: self, action: #selector(closeProfileVC))
     navigationItem.setLeftBarButton(leftItem, animated: true)
   }
   
@@ -188,40 +201,40 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
   func isEmojiKeyboard() -> Bool {
     return textInputMode?.primaryLanguage == "emoji" || textInputMode?.primaryLanguage == nil
   }
-  
-  
+
+
   @objc func inputModeDidChange(sender: NSNotification) {
-    
+
     if isEmojiKeyboard(){
       print("is emoji")
       view.frame.origin.y += 216.0
     }
-    
+
   }
-  
-  
+
+
   @objc func keyboardWillShow(sender: NSNotification) {
     if view.frame.origin.y < 0.0 {
       view.frame.origin.y += 42.0
       return
     }
-    
+
     if let keyboardSize = (sender.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
       view.frame.origin.y -= keyboardSize.height
     }
   }
-  
-  
+
+
   @objc func keyboardWillHide(sender: NSNotification) {
     if isEmojiKeyboard(){
       view.frame.origin.y += 42.0
       return
     }
-    
+
     if view.frame.origin.y >= 0.0 {
       return
     }
-    
+
     if let keyboardSize = (sender.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
       view.frame.origin.y += keyboardSize.height
     }
@@ -312,18 +325,18 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
 
 
 private func showSuccessAlert() {
-  let alertController = UIAlertController(title: "Changes saved!", message: nil, preferredStyle: .alert)
+  let alertController = UIAlertController(title: "Изменения сохранены!", message: nil, preferredStyle: .alert)
   alertController.view.tintColor = UIColor.black
-  alertController.addAction(UIAlertAction(title: "Done", style: .default, handler: nil))
+  alertController.addAction(UIAlertAction(title: "Готово", style: .default, handler: nil))
   self.present(alertController, animated: true, completion: nil)
 }
 
 
 private func showErrorAlert() {
-  let alertController = UIAlertController(title: "Error", message: "could not save data", preferredStyle: .alert)
+  let alertController = UIAlertController(title: "Ошибка", message: "при сохранении", preferredStyle: .alert)
   alertController.view.tintColor = UIColor.black
-  alertController.addAction(UIAlertAction(title: "Done", style: .cancel, handler: nil))
-  alertController.addAction(UIAlertAction(title: "Retry", style: .default) { action in
+  alertController.addAction(UIAlertAction(title: "Готово", style: .cancel, handler: nil))
+  alertController.addAction(UIAlertAction(title: "Еще раз", style: .default) { action in
     self.saveButtonPressed(self);
   })
   self.present(alertController, animated: true, completion: nil)
@@ -396,6 +409,19 @@ extension ProfileViewController: UITextViewDelegate {
   // user edited text view
   @objc func textViewDidChange(_ textView: UITextView) {
     handleSaveButtonStyle(canSave: dataWasChanged)
+  }
+  
+}
+
+
+
+// MARK: - IPicturesViewControllerDelegate
+extension ProfileViewController: IPicturesViewControllerDelegate {
+  // passing the selected web image
+  func collectionPickerController(_ picker: ICollectionPickerController, didFinishPickingImage image: UIImage) {
+    userImage.image = image
+    handleSaveButtonStyle(canSave: true)
+    picker.close()
   }
   
 }

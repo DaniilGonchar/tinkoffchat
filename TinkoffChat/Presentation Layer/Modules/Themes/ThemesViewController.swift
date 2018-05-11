@@ -63,8 +63,8 @@ class ThemesViewController: UIViewController {
   }
   
   private func setupNavbar() {
-    navigationItem.title = "Themes"
-    let leftItem = UIBarButtonItem(title: "Back",
+    navigationItem.title = "Темы"
+    let leftItem = UIBarButtonItem(title: "Назад",
                                     style: .plain,
                                     target: self,
                                     action: #selector(closeVC))

@@ -7,6 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DE3140E720A628F40072DA59 /* Requests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3140E620A628F40072DA59 /* Requests.swift */; };
+		DE3140E920A62A400072DA59 /* NetworkingProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3140E820A62A400072DA59 /* NetworkingProtocols.swift */; };
+		DE3140EB20A62AC20072DA59 /* RequestSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3140EA20A62AC20072DA59 /* RequestSender.swift */; };
+		DE3140ED20A62F070072DA59 /* RequestsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3140EC20A62F070072DA59 /* RequestsFactory.swift */; };
+		DE3140F020A62FCD0072DA59 /* SearchParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3140EF20A62FCD0072DA59 /* SearchParser.swift */; };
+		DE3140F220A62FD60072DA59 /* DownloadParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3140F120A62FD60072DA59 /* DownloadParser.swift */; };
+		DE3140F820A636220072DA59 /* PicturesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3140F720A636220072DA59 /* PicturesViewController.swift */; };
+		DE3140FA20A636950072DA59 /* PicturesProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3140F920A636950072DA59 /* PicturesProtocols.swift */; };
+		DE3140FC20A640DB0072DA59 /* PictureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3140FB20A640DB0072DA59 /* PictureCell.swift */; };
+		DE3140FE20A641CA0072DA59 /* PictureCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE3140FD20A641CA0072DA59 /* PictureCell.xib */; };
+		DE31410020A642710072DA59 /* PicturesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE3140FF20A642710072DA59 /* PicturesModel.swift */; };
+		DE31410220A643360072DA59 /* Picture.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE31410120A643360072DA59 /* Picture.swift */; };
+		DE31410420A643880072DA59 /* PicturesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE31410320A643880072DA59 /* PicturesView.xib */; };
+		DE31410820A646460072DA59 /* PicturesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE31410720A646460072DA59 /* PicturesService.swift */; };
+		DE31410A20A6469F0072DA59 /* PictureServiceProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE31410920A6469F0072DA59 /* PictureServiceProtocols.swift */; };
 		DE6AE853204855F400A567FD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DE6AE852204855F400A567FD /* Images.xcassets */; };
 		DE77E5ED205EF2510066007D /* ThemesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE77E5EC205EF2510066007D /* ThemesViewController.m */; };
 		DE804EC120757D8600C6EF26 /* Communicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE804EC020757D8600C6EF26 /* Communicator.swift */; };
@@ -47,6 +62,21 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DE3140E620A628F40072DA59 /* Requests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Requests.swift; sourceTree = "<group>"; };
+		DE3140E820A62A400072DA59 /* NetworkingProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingProtocols.swift; sourceTree = "<group>"; };
+		DE3140EA20A62AC20072DA59 /* RequestSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestSender.swift; sourceTree = "<group>"; };
+		DE3140EC20A62F070072DA59 /* RequestsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestsFactory.swift; sourceTree = "<group>"; };
+		DE3140EF20A62FCD0072DA59 /* SearchParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchParser.swift; sourceTree = "<group>"; };
+		DE3140F120A62FD60072DA59 /* DownloadParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadParser.swift; sourceTree = "<group>"; };
+		DE3140F720A636220072DA59 /* PicturesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicturesViewController.swift; sourceTree = "<group>"; };
+		DE3140F920A636950072DA59 /* PicturesProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicturesProtocols.swift; sourceTree = "<group>"; };
+		DE3140FB20A640DB0072DA59 /* PictureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureCell.swift; sourceTree = "<group>"; };
+		DE3140FD20A641CA0072DA59 /* PictureCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PictureCell.xib; sourceTree = "<group>"; };
+		DE3140FF20A642710072DA59 /* PicturesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicturesModel.swift; sourceTree = "<group>"; };
+		DE31410120A643360072DA59 /* Picture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Picture.swift; sourceTree = "<group>"; };
+		DE31410320A643880072DA59 /* PicturesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PicturesView.xib; sourceTree = "<group>"; };
+		DE31410720A646460072DA59 /* PicturesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicturesService.swift; sourceTree = "<group>"; };
+		DE31410920A6469F0072DA59 /* PictureServiceProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureServiceProtocols.swift; sourceTree = "<group>"; };
 		DE6AE852204855F400A567FD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		DE77E5EA205EF2500066007D /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		DE77E5EB205EF2510066007D /* ThemesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThemesViewController.h; sourceTree = "<group>"; };
@@ -103,6 +133,66 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DE3140E520A6288B0072DA59 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				DE3140E620A628F40072DA59 /* Requests.swift */,
+				DE3140E820A62A400072DA59 /* NetworkingProtocols.swift */,
+				DE3140EA20A62AC20072DA59 /* RequestSender.swift */,
+				DE3140EC20A62F070072DA59 /* RequestsFactory.swift */,
+				DE3140EE20A62FB10072DA59 /* Parsers */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		DE3140EE20A62FB10072DA59 /* Parsers */ = {
+			isa = PBXGroup;
+			children = (
+				DE3140EF20A62FCD0072DA59 /* SearchParser.swift */,
+				DE3140F120A62FD60072DA59 /* DownloadParser.swift */,
+			);
+			path = Parsers;
+			sourceTree = "<group>";
+		};
+		DE3140F520A633C40072DA59 /* Pictures */ = {
+			isa = PBXGroup;
+			children = (
+				DE31410520A6438F0072DA59 /* Controller */,
+				DE3140F620A635FE0072DA59 /* Cell */,
+				DE3140FF20A642710072DA59 /* PicturesModel.swift */,
+				DE3140F920A636950072DA59 /* PicturesProtocols.swift */,
+				DE31410120A643360072DA59 /* Picture.swift */,
+			);
+			path = Pictures;
+			sourceTree = "<group>";
+		};
+		DE3140F620A635FE0072DA59 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				DE3140FB20A640DB0072DA59 /* PictureCell.swift */,
+				DE3140FD20A641CA0072DA59 /* PictureCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		DE31410520A6438F0072DA59 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				DE31410320A643880072DA59 /* PicturesView.xib */,
+				DE3140F720A636220072DA59 /* PicturesViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		DE31410620A6462E0072DA59 /* Pictures */ = {
+			isa = PBXGroup;
+			children = (
+				DE31410720A646460072DA59 /* PicturesService.swift */,
+				DE31410920A6469F0072DA59 /* PictureServiceProtocols.swift */,
+			);
+			path = Pictures;
+			sourceTree = "<group>";
+		};
 		DE8975772042FDB100932176 = {
 			isa = PBXGroup;
 			children = (
@@ -126,13 +216,13 @@
 				DEA1CDCD20927E1C00916FFE /* RootAssembly.swift */,
 				DE77E5EA205EF2500066007D /* Bridging-Header.h */,
 				DEC5708D207DE45B00CB43F1 /* TinkoffChat.xcdatamodeld */,
-				DEA1CDB02092627900916FFE /* Core Layer */,
 				DEA1CDAF2092626C00916FFE /* Service Layer */,
 				DEA1CDAE2092625B00916FFE /* Presentation Layer */,
-				DE89758C2042FDB100932176 /* LaunchScreen.storyboard */,
+				DEA1CDB02092627900916FFE /* Core Layer */,
 				DEA1CDB12092628100916FFE /* Unused Old Tasks */,
 				DEF617902063E15000523C2B /* Extensions */,
 				DE6AE852204855F400A567FD /* Images.xcassets */,
+				DE89758C2042FDB100932176 /* LaunchScreen.storyboard */,
 				DE89758F2042FDB100932176 /* Info.plist */,
 			);
 			path = TinkoffChat;
@@ -142,7 +232,6 @@
 			isa = PBXGroup;
 			children = (
 				DEA1CDB3209262ED00916FFE /* Modules */,
-				DEA1CDB2209262E100916FFE /* Assembly */,
 			);
 			path = "Presentation Layer";
 			sourceTree = "<group>";
@@ -159,10 +248,11 @@
 		DEA1CDB02092627900916FFE /* Core Layer */ = {
 			isa = PBXGroup;
 			children = (
+				DEA1CDBA209265BD00916FFE /* Assembly */,
+				DE3140E520A6288B0072DA59 /* Networking */,
 				DEA1CDCA20927C7C00916FFE /* Themes */,
 				DEA1CDBE209265F300916FFE /* CoreData */,
 				DEA1CDBD209265DE00916FFE /* Multipeer */,
-				DEA1CDBA209265BD00916FFE /* Assembly */,
 			);
 			path = "Core Layer";
 			sourceTree = "<group>";
@@ -190,9 +280,11 @@
 		DEA1CDB3209262ED00916FFE /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				DEA1CDB2209262E100916FFE /* Assembly */,
+				DEA1CDB7209264A400916FFE /* Profile */,
+				DE3140F520A633C40072DA59 /* Pictures */,
 				DEA1CDE82092940600916FFE /* ConversationsList */,
 				DEA1CDDA2092860100916FFE /* Conversation */,
-				DEA1CDB7209264A400916FFE /* Profile */,
 				DEA1CDB62092648000916FFE /* Themes */,
 			);
 			path = Modules;
@@ -209,6 +301,7 @@
 		DEA1CDB52092632E00916FFE /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				DE31410620A6462E0072DA59 /* Pictures */,
 				DEA1CDD120927FAA00916FFE /* Themes */,
 				DEA1CDC0209267A300916FFE /* FRC */,
 			);
@@ -400,8 +493,10 @@
 				DEA1CDE520928E8C00916FFE /* IncomingMessageCell.xib in Resources */,
 				DE89758E2042FDB100932176 /* LaunchScreen.storyboard in Resources */,
 				DEA1CDE420928E8C00916FFE /* OutgoingMessageCell.xib in Resources */,
+				DE3140FE20A641CA0072DA59 /* PictureCell.xib in Resources */,
 				DEA1CDEA2092976600916FFE /* ConversationCell.xib in Resources */,
 				DEA1CDFD2092BAE400916FFE /* ThemesViewController.xib in Resources */,
+				DE31410420A643880072DA59 /* PicturesView.xib in Resources */,
 				DEA1CDEF20929EE000916FFE /* ConversationsListViewController.xib in Resources */,
 				DEA1CDFB2092B9A800916FFE /* ProfileViewController.xib in Resources */,
 				DEA1CDE720928F9500916FFE /* ConversationViewController.xib in Resources */,
@@ -415,11 +510,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DE3140EB20A62AC20072DA59 /* RequestSender.swift in Sources */,
 				DEA1CDD52092804900916FFE /* FRCService.swift in Sources */,
 				DEF6178F2063E09D00523C2B /* ThemesViewController.swift in Sources */,
+				DE3140FA20A636950072DA59 /* PicturesProtocols.swift in Sources */,
 				DEF617842061C90800523C2B /* MessageCell.swift in Sources */,
+				DE3140ED20A62F070072DA59 /* RequestsFactory.swift in Sources */,
 				DE77E5ED205EF2510066007D /* ThemesViewController.m in Sources */,
 				DE804EC120757D8600C6EF26 /* Communicator.swift in Sources */,
+				DE31410820A646460072DA59 /* PicturesService.swift in Sources */,
 				DEC57094207DE6C400CB43F1 /* CoreDataStack.swift in Sources */,
 				DE8975862042FDB100932176 /* ProfileViewController.swift in Sources */,
 				DEA1CDC520926F1300916FFE /* CoreDataManager.swift in Sources */,
@@ -427,22 +526,31 @@
 				DEFD04772051C6E1000719BD /* ConversationViewController.swift in Sources */,
 				DE8975842042FDB100932176 /* AppDelegate.swift in Sources */,
 				DEFD0471205144DA000719BD /* ConversationsListViewController.swift in Sources */,
+				DE3140E720A628F40072DA59 /* Requests.swift in Sources */,
 				DEA1CDC320926DE500916FFE /* CoreAssembly.swift in Sources */,
+				DE3140FC20A640DB0072DA59 /* PictureCell.swift in Sources */,
 				DEA1CDF120929F8100916FFE /* ProfileModel.swift in Sources */,
+				DE3140E920A62A400072DA59 /* NetworkingProtocols.swift in Sources */,
 				DEA1CDDD209286BB00916FFE /* ConversationModel.swift in Sources */,
 				DEF617922063E16300523C2B /* Extensions.swift in Sources */,
 				DEF6178820626B9800523C2B /* Themes.m in Sources */,
 				DEA1CDD320927FC100916FFE /* ThemesService.swift in Sources */,
 				DEA1CDD92092843300916FFE /* PresentationAssembly.swift in Sources */,
 				DEA1CDD020927F1600916FFE /* ServicesAssembly.swift in Sources */,
+				DE31410020A642710072DA59 /* PicturesModel.swift in Sources */,
+				DE31410A20A6469F0072DA59 /* PictureServiceProtocols.swift in Sources */,
 				DEA1CDC72092738D00916FFE /* ConversationsDataSource.swift in Sources */,
 				DEF6177C2061A9CC00523C2B /* ConversationCell.swift in Sources */,
+				DE3140F220A62FD60072DA59 /* DownloadParser.swift in Sources */,
 				DEA1CDF52092A75100916FFE /* ThemesModel.swift in Sources */,
 				DEA1CDCE20927E1C00916FFE /* RootAssembly.swift in Sources */,
 				DEA1CDEC20929A0E00916FFE /* ConversationListModel.swift in Sources */,
 				DEA1CDCC20927C9400916FFE /* ThemesManager.swift in Sources */,
 				DEC5708F207DE45B00CB43F1 /* TinkoffChat.xcdatamodeld in Sources */,
+				DE3140F820A636220072DA59 /* PicturesViewController.swift in Sources */,
+				DE31410220A643360072DA59 /* Picture.swift in Sources */,
 				DEA1CDD72092812F00916FFE /* CommunicationService.swift in Sources */,
+				DE3140F020A62FCD0072DA59 /* SearchParser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

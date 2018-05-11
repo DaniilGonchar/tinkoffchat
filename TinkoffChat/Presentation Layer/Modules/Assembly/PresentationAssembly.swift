@@ -17,6 +17,8 @@ protocol IPresentationAssembly {
   func conversationsListViewController() -> ConversationsListViewController
   
   func conversationViewController(model: ConversationModel) -> ConversationViewController
+  
+  func picturesViewController() -> PicturesViewController
 }
 
 
@@ -41,12 +43,22 @@ class PresentationAssembly: IPresentationAssembly {
   
   
   func profileViewController() -> ProfileViewController {
-    return ProfileViewController(model: profileModel())
+    return ProfileViewController(model: profileModel(), presentationAssembly: self)
   }
   
   
   private func profileModel() -> IAppUserModel {
     return ProfileModel(dataService: CoreDataManager())
+  }
+  
+  
+  func picturesViewController() -> PicturesViewController {
+    return PicturesViewController(model: picturesModel())
+  }
+  
+  
+  private func picturesModel() -> IPicturesModel {
+    return PicturesModel(picturesService: serviceAssembly.picturesService)
   }
   
   
@@ -59,6 +71,7 @@ class PresentationAssembly: IPresentationAssembly {
     return ConversationsListViewController(model: conversationsListModel(),
                                            presentationAssembly: self)
   }
+  
   
   private func conversationsListModel() -> IConversationListModel {
     return ConversationsListModel(communicationService: serviceAssembly.communicationService,

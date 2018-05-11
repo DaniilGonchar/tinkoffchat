@@ -72,7 +72,7 @@ class ConversationsListViewController: UIViewController {
     profileButton.tintColor = UIColor.gray
     navigationItem.rightBarButtonItem = profileButton
     
-    let themesButton = UIBarButtonItem(title: "Themes", style: .plain, target: self, action: #selector(self.themesButtonFunc) )
+    let themesButton = UIBarButtonItem(title: "Темы", style: .plain, target: self, action: #selector(self.themesButtonFunc) )
     
     navigationItem.leftBarButtonItem = themesButton
     

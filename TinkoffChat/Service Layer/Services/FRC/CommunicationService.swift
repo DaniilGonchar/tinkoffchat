@@ -11,6 +11,7 @@ import UIKit
 
 protocol ICommunicatorDelegate: class {
   var communicator: ICommunicator { get }
+  var connectionTracker: IUserConnectionTracker? { get set }
   
   // discovery
   func didFindUser(id: String, name: String)
@@ -30,9 +31,17 @@ protocol ICommunicatorDelegate: class {
 
 
 
+protocol IUserConnectionTracker {
+  func changeControlsState(enabled: Bool)
+}
+
+
+
 class CommunicationService: ICommunicatorDelegate {
   var communicator: ICommunicator
   private let dataManager: IDataManager
+  var connectionTracker: IUserConnectionTracker?
+  
   
   
   init(dataManager: IDataManager, communicator: ICommunicator) {
@@ -44,11 +53,13 @@ class CommunicationService: ICommunicatorDelegate {
   
   
   func didFindUser(id: String, name: String) {
+    connectionTracker?.changeControlsState(enabled: true)
     dataManager.appendConversation(id: id, userName: name)
   }
   
   
   func didLoseUser(id: String) {
+    connectionTracker?.changeControlsState(enabled: false)
     dataManager.makeConversationOffline(id: id)
   }
   

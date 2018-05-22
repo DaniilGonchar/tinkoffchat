@@ -22,6 +22,7 @@
 		DE31410420A643880072DA59 /* PicturesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE31410320A643880072DA59 /* PicturesView.xib */; };
 		DE31410820A646460072DA59 /* PicturesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE31410720A646460072DA59 /* PicturesService.swift */; };
 		DE31410A20A6469F0072DA59 /* PictureServiceProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE31410920A6469F0072DA59 /* PictureServiceProtocols.swift */; };
+		DE33222520B4251900DDF9DD /* Emitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE33222420B4251900DDF9DD /* Emitter.swift */; };
 		DE6AE853204855F400A567FD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DE6AE852204855F400A567FD /* Images.xcassets */; };
 		DE77E5ED205EF2510066007D /* ThemesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE77E5EC205EF2510066007D /* ThemesViewController.m */; };
 		DE804EC120757D8600C6EF26 /* Communicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE804EC020757D8600C6EF26 /* Communicator.swift */; };
@@ -77,6 +78,7 @@
 		DE31410320A643880072DA59 /* PicturesView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PicturesView.xib; sourceTree = "<group>"; };
 		DE31410720A646460072DA59 /* PicturesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicturesService.swift; sourceTree = "<group>"; };
 		DE31410920A6469F0072DA59 /* PictureServiceProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureServiceProtocols.swift; sourceTree = "<group>"; };
+		DE33222420B4251900DDF9DD /* Emitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emitter.swift; sourceTree = "<group>"; };
 		DE6AE852204855F400A567FD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		DE77E5EA205EF2500066007D /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		DE77E5EB205EF2510066007D /* ThemesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThemesViewController.h; sourceTree = "<group>"; };
@@ -193,6 +195,14 @@
 			path = Pictures;
 			sourceTree = "<group>";
 		};
+		DE33222320B424FC00DDF9DD /* FlakeAnimation */ = {
+			isa = PBXGroup;
+			children = (
+				DE33222420B4251900DDF9DD /* Emitter.swift */,
+			);
+			path = FlakeAnimation;
+			sourceTree = "<group>";
+		};
 		DE8975772042FDB100932176 = {
 			isa = PBXGroup;
 			children = (
@@ -280,6 +290,7 @@
 		DEA1CDB3209262ED00916FFE /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				DE33222320B424FC00DDF9DD /* FlakeAnimation */,
 				DEA1CDB2209262E100916FFE /* Assembly */,
 				DEA1CDB7209264A400916FFE /* Profile */,
 				DE3140F520A633C40072DA59 /* Pictures */,
@@ -518,6 +529,7 @@
 				DE3140ED20A62F070072DA59 /* RequestsFactory.swift in Sources */,
 				DE77E5ED205EF2510066007D /* ThemesViewController.m in Sources */,
 				DE804EC120757D8600C6EF26 /* Communicator.swift in Sources */,
+				DE33222520B4251900DDF9DD /* Emitter.swift in Sources */,
 				DE31410820A646460072DA59 /* PicturesService.swift in Sources */,
 				DEC57094207DE6C400CB43F1 /* CoreDataStack.swift in Sources */,
 				DE8975862042FDB100932176 /* ProfileViewController.swift in Sources */,

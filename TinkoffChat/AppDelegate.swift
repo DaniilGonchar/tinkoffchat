@@ -16,6 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   
   private let rootAssembly = RootAssembly()
   
+  private var emitter: Emitter!
+  
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
     
@@ -24,6 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let controller = rootAssembly.presentationAssembly.conversationsListViewController()
     let navigationController = UINavigationController()
     navigationController.viewControllers = [controller]
+    // Handling tinkoff flake emitter
+    emitter = Emitter(view: navigationController.view)
     
     window?.rootViewController = navigationController
     window?.makeKeyAndVisible()

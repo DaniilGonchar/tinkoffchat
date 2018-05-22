@@ -12,6 +12,8 @@ import CoreData
 
 class ConversationsListViewController: UIViewController {
   
+  private var emitter: Emitter!
+  
   @IBOutlet weak var tableView: UITableView!
   
   private var model: IConversationListModel
@@ -84,6 +86,8 @@ class ConversationsListViewController: UIViewController {
     let navigationController = UINavigationController()
     navigationController.viewControllers = [controller]
     
+    emitter = Emitter(view: navigationController.view)
+    
     present(navigationController, animated: true)
   }
   
@@ -97,6 +101,8 @@ class ConversationsListViewController: UIViewController {
     
     let navigationController = UINavigationController()
     navigationController.viewControllers = [controller]
+    
+    emitter = Emitter(view: navigationController.view)
     
     present(navigationController, animated: true)
   }
